@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spiekbriefje Geweldsbeheersing</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#14213d;--muted:#5b6475;--line:#dfe3ea;--acc:#1d4ed8;--accbg:#e6edff;--ok:#0f7a4a;--okbg:#e3f6ec;--no:#b42318;--nobg:#fdebe9;--warn:#8a5a00;--warnbg:#fff4d6}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1420;--card:#172033;--ink:#eef2fa;--muted:#a3adc2;--line:#2a3550;--acc:#8fb0ff;--accbg:#1f2e55;--ok:#6ee0a6;--okbg:#10301f;--no:#ff9b91;--nobg:#3a1714;--warn:#ffd277;--warnbg:#3a2c0a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;-webkit-text-size-adjust:100%}
+header{padding:14px 16px 6px}
+h1{font-size:1.2rem;margin:0}
+header p{margin:2px 0 0;color:var(--muted);font-size:.85rem}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;overflow-x:auto;padding:8px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 13px;border-radius:999px;font:600 .88rem system-ui;cursor:pointer}
+nav button[aria-selected=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+@media (prefers-color-scheme:dark){nav button[aria-selected=true]{color:#0e1420}}
+main{padding:12px;max-width:640px;margin:0 auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:1rem;margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chips button{border:2px solid var(--line);background:var(--card);color:var(--ink);padding:10px 14px;border-radius:12px;font:700 .95rem system-ui;cursor:pointer}
+.chips button[aria-pressed=true]{border-color:var(--acc);background:var(--accbg)}
+.row{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:0}
+.tag{flex:none;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.row .v{flex:1}
+.y{color:var(--ok);font-weight:700}.n{color:var(--no);font-weight:700}
+.pill{display:inline-block;border-radius:6px;padding:1px 7px;font-size:.8rem;font-weight:700;margin-right:4px}
+.pill.y{background:var(--okbg)}.pill.n{background:var(--nobg)}.pill.w{background:var(--warnbg);color:var(--warn)}
+.big{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.big div{background:var(--accbg);border-radius:12px;padding:10px;text-align:center}
+.big b{display:block;font-size:1.5rem;color:var(--acc)}
+.big span{font-size:.78rem;color:var(--muted)}
+.chk{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer}
+.chk:first-of-type{border-top:0}
+.box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-weight:800;color:transparent}
+.chk[aria-checked=true] .box{background:var(--ok);border-color:var(--ok);color:#fff}
+.chk[aria-checked=true] .t{opacity:.55}
+.chk b{display:block}
+.chk small{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+.fl{background:var(--card);border:1px solid var(--line);border-radius:14px;min-height:190px;padding:18px;display:flex;flex-direction:column;justify-content:center;cursor:pointer;text-align:left;width:100%;color:var(--ink);font:inherit}
+.fl .q{font-weight:700;font-size:1.05rem}
+.fl .a{margin-top:12px;padding-top:12px;border-top:2px dashed var(--line);color:var(--ok);font-weight:600}
+.fl .hint{color:var(--muted);font-size:.8rem;margin-top:12px}
+.ctl{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.ctl button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font:600 .9rem system-ui;cursor:pointer}
+.mist{border-left:5px solid var(--no);padding:10px 12px;background:var(--nobg);border-radius:0 10px 10px 0;margin-bottom:10px}
+.mist b{display:block;margin-bottom:2px}
+.mist .r{color:var(--ok);font-weight:600;margin-top:3px;display:block}
+.small{font-size:.8rem;color:var(--muted)}
+.sb{position:relative;margin:8px 0 2px}
+.sb input{width:100%;padding:11px 38px 11px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:16px system-ui}
+.sb button{position:absolute;right:6px;top:6px;border:0;background:transparent;color:var(--muted);font-size:1.2rem;padding:4px 8px;cursor:pointer}
+mark{background:var(--warnbg);color:var(--ink);border-radius:3px;padding:0 1px}
+.res{border-top:1px solid var(--line);padding:10px 0}
+.res:first-child{border-top:0}
+.res .sec{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.03em;color:var(--acc)}
+.res b{display:block}
+#up{position:fixed;right:14px;bottom:18px;width:46px;height:46px;border-radius:50%;border:0;background:var(--acc);color:#fff;font-size:1.4rem;box-shadow:0 2px 10px rgba(0,0,0,.3);cursor:pointer;display:none;z-index:9}
+@media (prefers-color-scheme:dark){#up{color:#0e1420}}
+.mn{background:var(--warnbg);color:var(--warn);border-radius:12px;padding:10px 12px;font-weight:700;margin-bottom:12px}
+a.wl{color:var(--acc);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+<h1>Spiekbriefje Geweldsbeheersing</h1>
+<p>Laatste check vlak voor de toets. Tik op de tabbladen of zoek hieronder.</p>
+<div class="sb"><input id="q" type="search" placeholder="Zoek, bijv. 24 uur, boeien, hond" autocomplete="off" aria-label="Zoeken"><button id="qx" aria-label="Wis zoekopdracht" style="display:none">&times;</button></div>
+</header>
+<nav id="tabs" role="tablist"></nav>
+<main id="m"></main>
+<button id="up" aria-label="Naar boven">&#8593;</button>
+<script>
+var MIDDELEN = {
+"Vuurwapen": [
+ ["Aanhouden", "Gevaarlijke persoon: <b>vuurwapen of levensbedreigend geweld</b>."],
+ ["Onttrekken", "Misdrijf met <b>4 jaar of meer</b> én één van drie extra eisen: ernstige aantasting lichamelijke integriteit · woningfeit met geweld of bedreiging tegen personen · door gevolg bedreigend voor de samenleving."],
+ ["Niet als", "De identiteit bekend is en uitstel geen onaanvaardbaar gevaar geeft (art. 7 lid 2)."],
+ ["Ook", "Ernstig gewond dier doden · oproer, alleen op last van bevoegd gezag en in gesloten verband onder een meerdere · afweer. Lid 2 (identiteit bekend) geldt voor de aanhoudingsgronden a en b."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b>: het <b>vuurwapen</b>. Je zegt dus dat er <b>geschoten</b> wordt (art. 10a: &lsquo;dat geschoten zal worden&rsquo;). Geef een <b>bevel</b>, bijvoorbeeld &lsquo;Laat vallen dat wapen of ik schiet!&rsquo;. Wordt het niet onverwijld opgevolgd, dan waarschuw je <b>onmiddellijk voordat je gericht schiet</b>, luid of op andere niet mis te verstane wijze. Zo nodig mag een waarschuwingsschot dat vervangen, met zo min mogelijk gevaar voor personen en zaken. Achterwege alleen als de omstandigheden het niet toelaten: vermeld dat bij de melding. Niet bij lange afstandsprecisievuur. Het artikel schrijft het bevel zelf niet voor, het gaat ervan uit."],
+ ["Melden", "Ook <b>ter hand nemen</b> en <b>richten</b> melden (aanwenden). hOvJ registreert altijd bij vuurwapengebruik. Terstond naar de officier van justitie bij dood, zwaar letsel (ook als dat ernstig te verwachten was), of vuurwapengebruik met enig letsel."],
+ ["Ter hand", "Alleen als gebruik mag, of voor je veiligheid als zo'n situatie redelijkerwijs ontstaat. Daarna <b>terstond opbergen</b>."],
+ ["Wet","Ambtsinstructie art. 7 (gebruik) · art. 10 (ter hand nemen) · art. 10a (waarschuwingsschot)"]
+],
+"Pepperspray": [
+ ["Aanhouden", "Gevaarlijke persoon: <b>wapen of ander geweld</b>."],
+ ["Onttrekken", "Ja, <b>zonder strafdrempel</b>. Maar passief verzet (blijven zitten) is <b>geen</b> onttrekken."],
+ ["Ook", "Agressieve dieren · afweer."],
+ ["Niet", "Op afstand houden · menigte verspreiden."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b>: <b>pepperspray</b>, bijvoorbeeld 'of ik spray'. 'Stop of ik gebruik geweld' is te vaag."],
+ ["Melden", "Geweldsmelding (schriftelijk en mondeling) aan de hOvJ."],
+ ["Wet","Ambtsinstructie art. 12a (gebruik) · art. 12b (waarschuwen)"]
+],
+"Stroomstootwapen": [
+ ["Schietmodus", "Gevaarlijke persoon (wapen of ander geweld) · onttrekken · agressieve dieren · afweer."],
+ ["Schokmodus", "<b>Alleen</b> agressieve dieren en afweer. <b>Nooit</b> om iemand aan te houden."],
+ ["Let op", "Alleen als het middel jou is toegekend en je erin bent geoefend (art. 4). Een pijltje dat mist en daarna wordt aangedrukt: gebruik in <b>schietmodus</b>."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b>: <b>stroomstootwapen</b>, bijvoorbeeld 'of ik geef stroom'. Het knetteren van het SSW kan ook een niet mis te verstane waarschuwing zijn."],
+ ["Dreigen", "Dreigen zonder gebruik is geen geweldsmelding. Vastleggen kan volgens de syllabus in een mutatie (actie SSWD); check je korpsvoorschrift."],
+ ["Melden", "Gebruik: geweldsmelding aan de hOvJ."],
+ ["Wet","Ambtsinstructie art. 12c (gebruik) · art. 12d (waarschuwen)"]
+],
+"Wapenstok": [
+ ["Aanhouden", "Gevaarlijke persoon: wapen of ander geweld."],
+ ["Onttrekken", "Ja, zonder strafdrempel."],
+ ["Uniek", "<b>Op afstand houden</b> wie een ambtenaar in zijn taak hindert, of geen gehoor geeft aan een bevoegd bevel of vordering. Alleen de wapenstok mag dit."],
+ ["Ook", "Menigte verspreiden bij bedreiging openbare orde · afweer. Niet bij dieren."],
+ ["Slaan", "Op de grote spiergroepen, niet op het hoofd (syllabus). Hoofdletsel is snel disproportioneel."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b>: de <b>wapenstok</b>. Dreigen met de wapenstok is geen aanwenden."],
+ ["Melden", "Gebruik: geweldsmelding aan de hOvJ."],
+ ["Wet","Ambtsinstructie art. 12e (gebruik) · art. 12f (waarschuwen)"]
+],
+"Hond": [
+ ["Aanhouden", "Gevaarlijke persoon: vuurwapen of ander geweld."],
+ ["Onttrekken", "Misdrijf van <b>4 jaar of meer</b> (volgens de wettelijke omschrijving; poging en deelneming tellen mee), <b>zonder</b> extra eis."],
+ ["Menigte", "Alleen bij ernstige, onmiddellijke bedreiging, en dan <b>aangelijnd</b>."],
+ ["Ook", "Afweer. Niet bij dieren."],
+ ["Toezicht", "Alleen onder direct en voortdurend toezicht van de geleider."],
+ ["Let op", "De Ambtsinstructie regelt alleen de inzet als <b>geweldmiddel</b>. Afzoeken van een terrein, waarbij de hond niemand bijt, valt er niet onder."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b>: de <b>hond</b> (surveillance- of AOT-hond), voordat je hem inzet."],
+ ["Melden", "Inzet als geweldmiddel: geweldsmelding aan de hOvJ."],
+ ["Wet","Ambtsinstructie art. 15a (gebruik) · art. 15b (waarschuwen)"]
+]
+};
+var CREF=["", "", "", "PW 7", "AI 1", "AI 10", "AI 17;PW 7", "", "", "PW 11;PW 12", "EVRM 3", "EVRM 2", "PW 7;AI 10a;AI 12b;AI 12d;AI 12f;AI 15b", "PW 7;AI 10a", "PW 7;AI 10a;AI 12b;AI 12d;AI 12f;AI 15b", "", "", "", "AI 7", "", "AI 7", "AI 7", "AI 12a", "AI 12a", "AI 12c", "AI 12c", "AI 12e", "AI 12e", "AI 12e;PW 7", "AI 15a", "AI 15", "AI 7;AI 12a;AI 12c", "AI 7;AI 15a", "AI 17", "AI 17", "AI 17;AI 18", "AI 18", "", "", "", "AI 1;AI 22", "AI 22", "", "", "AI 22a", "", "", "", "PW 7;AI 20", "PW 7", "", "", "BBUP 2", "", "", "AI 7;AI 8;AI 12a;AI 12c;AI 12e;AI 15a;SR 41", "AI 7", "AI 7", "PW 7", "", "", "", "", ""];
+var CHECKS = [
+ ["Bevoegd?", "Rechtmatige uitoefening van je bediening én een wettelijke grond (aanhouden, onttrekken, afweer, dier, enz.). Art. 7 lid 1 Politiewet."],
+ ["Toegekend en geoefend?", "Art. 4: het middel is jou rechtens toegekend, voor deze taak, en je bent erin geoefend."],
+ ["Redelijk = subsidiair", "Kan het ook met een lichter middel? Het <b>gekozen middel</b> moet nodig zijn. Art. 7 lid 1 en 7 Politiewet."],
+ ["Gematigd = proportioneel", "Niet meer dan nodig. De <b>hoeveelheid</b> (aantal klappen, duur) moet passen bij het doel. Art. 7 lid 7 Politiewet."],
+ ["Waarschuwen", "<b>Altijd het middel noemen</b> dat je gaat gebruiken. Zo mogelijk vooraf, onmiddellijk vóór gebruik. Algemeen: art. 7 lid 1 Politiewet. Specifiek: vuurwapen art. 10a, pepperspray art. 12b, SSW art. 12d, wapenstok art. 12f, hond art. 15b."],
+ ["Melden", "Aanwenden van geweld of ter hand nemen vuurwapen: schriftelijk en mondeling aan de hOvJ, zo spoedig mogelijk. Art. 17."]
+];
+var CARDS = [
+ ["Basis","Welke twee taken noemt art. 3 Politiewet?","Daadwerkelijke handhaving van de rechtsorde en het verlenen van hulp aan hen die dat behoeven."],
+ ["Basis","Wat zegt art. 7 lid 1 Politiewet?","Geweld mag in de rechtmatige uitoefening van je bediening, als het doel dat rechtvaardigt (mede gelet op de gevaren) en niet anders kan worden bereikt. Zo mogelijk eerst waarschuwen."],
+ ["Basis","Wat eist art. 7 lid 7 Politiewet?","Dat het geweld in verhouding tot het doel redelijk en gematigd blijft."],
+ ["Basis","Redelijk en gematigd: wat is het verschil?","Redelijk = subsidiariteit = het gekozen middel. Gematigd = proportionaliteit = de gekozen hoeveelheid."],
+ ["Basis","Wat is geweld in de Ambtsinstructie?","Dwangmatige kracht van meer dan geringe betekenis, op personen of zaken. Een ruit inslaan om een bewusteloze te bereiken is dus geweld."],
+ ["Basis","Is het ter hand nemen van je vuurwapen 'gebruik'?","Nee, dat is aanwenden van geweld. Richten, gericht houden en schieten zijn gebruik van het vuurwapen."],
+ ["Basis","Dreigen met een middel: geweldsmelding?","Nee. Dreigen of waarschuwen is geen aanwenden van geweld."],
+ ["Basis","Wat eist art. 4 voor het gebruik van een middel?","Het middel is jou rechtens toegekend, voor die taak, en je bent erin geoefend."],
+ ["Basis","Art. 5: je treedt op onder een aanwezige meerdere. Wat nu?","Geweld alleen op zijn uitdrukkelijke last, en hij noemt ook het middel. Anders alleen als hij vooraf anders besloot, of als je voor je veiligheid het vuurwapen ter hand neemt en de last niet is af te wachten."],
+ ["Basis","Wie heeft gezag over de politie?","De burgemeester bij openbare orde en hulpverlening. De officier van justitie bij strafrechtelijke handhaving."],
+ ["Basis","Welk EVRM-artikel kent geen uitzondering?","Art. 3 EVRM, het verbod van foltering."],
+ ["Basis","Welke maatstaf legt art. 2 EVRM aan dodelijk geweld op?","Het geweld moet absoluut noodzakelijk zijn."],
+ ["Waarschuwen","Hoe waarschuw je?","Eerst een bevel. Wordt dat niet onverwijld opgevolgd, dan waarschuw je direct voor gebruik, luid of op andere niet mis te verstane wijze, en je noemt altijd het middel dat je gaat gebruiken (bijvoorbeeld 'of ik spray'). Zeggen dat je geweld gebruikt is niet genoeg. Achterwege alleen als de omstandigheden het redelijkerwijs niet toelaten."],
+ ["Waarschuwen","Wanneer mag de waarschuwing vervallen?","Alleen als de omstandigheden het redelijkerwijs niet toelaten."],
+ ["Waarschuwen","'Stop, of ik gebruik geweld!' Voldoende?","Nee. Je noemt altijd het middel dat je gaat gebruiken: schieten, pepperspray, stroomstootwapen, wapenstok of hond."],
+ ["Waarschuwen","Wat eist art. 10a lid 2 van een waarschuwingsschot?","Dat het zo wordt gegeven dat gevaar voor personen of zaken zoveel mogelijk wordt vermeden. Het telt als gebruik van het vuurwapen en wordt gemeld."],
+ ["Middelen","Vuurwapen: wanneer mag je ter hand nemen (art. 10)?","Als gebruik is toegestaan, of voor de veiligheid als redelijkerwijs een situatie ontstaat waarin gebruik mag. Daarna terstond opbergen."],
+ ["Middelen","Vuurwapen: welke gronden heeft art. 7 lid 1?","a. aanhouden gevaarlijke persoon (vuurwapen of levensbedreigend geweld) · b. onttrekken, 4 jaar plus extra eis · c. oproer op last, in gesloten verband · e. gewond dier doden · f. afweer."],
+ ["Middelen","Vuurwapen bij onttrekken: welke extra eisen?","Naast 4 jaar of meer één van drie: ernstige aantasting lichamelijke integriteit · woningfeit met geweld of bedreiging tegen personen · door gevolg bedreigend voor de samenleving."],
+ ["Middelen","Wanneer geldt art. 7 lid 2 (geen vuurwapen)?","Bij de aanhoudingsgronden a en b: de identiteit is bekend en uitstel geeft geen onaanvaardbaar gevaar voor de rechtsorde."],
+ ["Middelen","Een dief rent weg met een jas (4 jaar). Vuurwapen?","Nee. De drempel is gehaald, maar diefstal voldoet aan geen van de drie extra eisen."],
+ ["Middelen","Een inbreker vlucht en heeft niemand bedreigd. Vuurwapen?","Nee. Een woningfeit telt alleen mee als er geweld of bedreiging met geweld tegen personen bij is."],
+ ["Middelen","Pepperspray: welke vier gronden?","a. aanhouden gevaarlijke persoon (wapen of ander geweld) · b. onttrekken · c. agressieve dieren · d. afweer. Geen 4-jaarsgrens."],
+ ["Middelen","Een demonstrant blijft zitten. Pepperspray?","Nee. Passief verzet is geen onttrekken."],
+ ["Middelen","Stroomstootwapen: schiet- en schokmodus?","Schietmodus: dezelfde vier gronden als pepperspray. Schokmodus: alleen agressieve dieren en afweer, nooit om aan te houden."],
+ ["Middelen","Een pijltje mist en je drukt het SSW aan. Welke modus?","Gebruik in de schietmodus."],
+ ["Middelen","Wapenstok: welke vijf gronden?","a. aanhouden gevaarlijke persoon · b. onttrekken · c. op afstand houden (hinderen of geen gehoor geven aan bevoegd bevel) · d. menigte bij bedreiging openbare orde · e. afweer."],
+ ["Middelen","Welk middel mag iemand op afstand houden?","Alleen de wapenstok."],
+ ["Middelen","Waar sla je met de wapenstok?","Op de grote spiergroepen, niet op het hoofd (syllabus). Hoofdletsel is snel disproportioneel."],
+ ["Middelen","Hond: welke gronden?","a. aanhouden gevaarlijke persoon · b. onttrekken bij misdrijf van 4 jaar of meer, zonder extra eis · c. afweer · menigte: ernstige onmiddellijke bedreiging, aangelijnd."],
+ ["Middelen","Valt het afzoeken van een terrein door de hond onder de Ambtsinstructie?","Nee, alleen de inzet als geweldmiddel."],
+ ["Middelen","Welk middel mag een gewond dier doden?","Het vuurwapen. Pepperspray en SSW zijn voor agressieve dieren."],
+ ["Middelen","Bij welke middelen geldt de 4-jaarseis?","Vuurwapen en hond (surveillance- en AOT-hond)."],
+ ["Melden","Wat meld je, hoe en aan wie?","Geweld of ter hand nemen van het vuurwapen: schriftelijk (i8) en mondeling aan de hOvJ, zo spoedig mogelijk. Schriftelijk: aard, middel, gevolgen. Mondeling: feiten, omstandigheden, redenen."],
+ ["Melden","Je handelt op last van een meerdere. Wie meldt?","De meerdere die de last gaf. Jij geeft de hOvJ desgevraagd inlichtingen."],
+ ["Melden","Wanneer registreert de hOvJ?","Bij dood of letsel van meer dan geringe betekenis, vuurwapengebruik, of als hij daar aanleiding toe ziet."],
+ ["Melden","Wanneer gaat het terstond naar de officier van justitie?","Bij dood, zwaar lichamelijk letsel (ook als dat ernstig te verwachten was), of vuurwapengebruik met enig letsel. Via de korpschef."],
+ ["Melden","Boeien gebruikt zonder kracht. Melden?","Ja, onverwijld schriftelijk aan de hOvJ, met de redenen (art. 23). Ook voor mondafscherming."],
+ ["Melden","Veiligheidsfouillering zonder vondst. Melden?","Ja, onverwijld schriftelijk aan de hOvJ, met de redenen (art. 21)."],
+ ["Boeien","Welke gronden voor handboeien (art. 22)?","Vrees voor ontvluchting, of voor schade aan de aangehouden persoon zelf, de ambtenaar of derden (veiligheid). Voor vervoer of verplaatsing van iemand die rechtens van zijn vrijheid is beroofd."],
+ ["Boeien","Wat is het verschil tussen vervoer en verplaatsing?","Vervoer: een persoon van A naar B brengen. Verplaatsing (art. 1 lid 4 sub q): binnen dezelfde locatie, zonder vervoermiddel. De periode direct ervoor valt eronder."],
+ ["Boeien","Mag een persoon met handboeien in de cel blijven?","Nee. Handboeien zijn er voor vervoer of verplaatsing. In de cel vervang je ze door hulpmiddelen jegens ingeslotenen (art. 35a)."],
+ ["Boeien","Mondafscherming (art. 22a): wanneer?","Voor vervoer of verplaatsing, en alleen als de feiten of omstandigheden het redelijkerwijs eisen voor de veiligheid van de ambtenaar of derden."],
+ ["Boeien","Iemand op het bureau voor hulpverlening: boeien?","Alleen op de veiligheidsgrond, niet op ontvluchting (art. 22b)."],
+ ["Boeien","Een bekende 'spuger' is nu rustig. Mondafscherming?","Kan, maar niet automatisch. Er moeten feiten of omstandigheden zijn die het redelijkerwijs vereisen voor de veiligheid. Een bekende die je recent meermaals bespuugde kan aanleiding zijn voor preventief. Zo'n gegeven van lang geleden is te weinig."],
+ ["Fouilleren","Veiligheidsfouillering: voorwaarde (art. 7 lid 3)?","Uit feiten of omstandigheden blijkt een onmiddellijk gevaar voor leven of veiligheid, en het onderzoek is noodzakelijk. Daarna melden."],
+ ["Fouilleren","Vervoersfouillering (art. 7 lid 4)?","Iedere te vervoeren of in te sluiten persoon, vóór vervoer door de politie. Niet melden."],
+ ["Fouilleren","Hoe fouilleer je volgens art. 20?","Oppervlakkig aftasten, zo veel mogelijk door een ambtenaar van hetzelfde geslacht. Gevaarlijke voorwerpen neem je in bewaring."],
+ ["Fouilleren","Een motorrijder loopt weg bij zijn bagagevak. Nog fouilleren?","Nee. Hij kan er niet meer bij, dus het gevaar is niet meer onmiddellijk."],
+ ["Fouilleren","Ambulance zonder politiebegeleiding: vervoersfouillering?","Nee. De vervoersfouillering ziet op vervoer door de politie."],
+ ["Ingeslotenen","Art. 35a: hoofdregel?","Hulpmiddel jegens een ingeslotene na toestemming van de hOvJ, ten hoogste 24 uur."],
+ ["Ingeslotenen","Art. 35a: wat bij spoed?","Is onmiddellijke toepassing vereist, dan beslist de ambtenaar zelf, ten hoogste 3 uur. De hOvJ wordt onverwijld geïnformeerd en beslist onverwijld over voortzetting. De arts wordt onverwijld ingelicht."],
+ ["Ingeslotenen","Welke vijf hulpmiddelen staan op de lijst?","Gecapitonneerde helm · gecapitonneerde handschoenen · mondafscherming · polsbanden · enkelbanden met tussenstuk."],
+ ["Ingeslotenen","Je past in de cel hulpmiddelen toe. Collega's van noodhulp, niet getraind in die hulpmiddelen, helpen met fixeren. Onder welke bevoegdheid vallen zij?","Onder de gewone geweldsbevoegdheid: art. 7 lid 1 en 7 Politiewet (redelijk en gematigd). Art. 35a geldt alleen voor de ambtenaar die belast is met de zorg voor ingeslotenen (Arrestantentaken) en in de hulpmiddelen is getraind."],
+ ["Afweer","Wat is afweer?","Een geweldsgrond die bij elk geweldmiddel staat (vuurwapen: art. 7 lid 1 sub f AI): geweld om direct gevaar voor het leven van personen of voor zwaar lichamelijk letsel af te wenden."],
+ ["Afweer","Waar is de afweerbevoegdheid geregeld?","Per geweldmiddel in de Ambtsinstructie, als één van de gronden: vuurwapen art. 7 lid 1 sub f · pepperspray art. 12a sub d · SSW art. 12c sub d · wapenstok art. 12e sub e · hond art. 15a lid 1 sub c. Volautomatisch vuur (art. 8): alleen ter afwending. De syllabus werkt het uit in Bijlage 2. Noodweer (art. 41 Sr) is iets anders: dat is een strafuitsluitingsgrond."],
+ ["Afweer","Wat is 'direct gevaar' in art. 7 lid 1 sub f AI?","Een concreet, serieus risico dat onmiddellijk ingrijpen nodig maakt: hier en nu."],
+ ["Afweer","Melding: een man houdt een mes tegen zijn eigen keel en drukt door na je bevel. Ter plaatse mag je afweer (art. 7 lid 1 sub f AI) gebruiken, al loopt alleen zijn eigen leven gevaar?","Ja. De grond is direct gevaar voor het leven van personen en hij is ook een persoon. Dat staat ook in de syllabus: het mag ook de persoon zelf zijn vanuit wie het gevaar komt, bijvoorbeeld bij dreigen met zelfdoding. Het middel moet wel redelijk en gematigd blijven (art. 7 lid 7 Politiewet)."],
+ ["Afweer","Een man slaat auto's kapot, niemand in de buurt. Afweer (art. 7 lid 1 sub f AI)?","Nee. Er is geen direct gevaar voor het leven van personen of voor zwaar lichamelijk letsel."],
+ ["Strafrecht","Noodweer, noodweerexces en putatief noodweer?","Noodweer (art. 41 lid 1): verdediging tegen een wederrechtelijke aanranding. Exces (lid 2): te ver gegaan door hevige gemoedsbeweging. Putatief: verschoonbare vergissing over een aanranding."],
+ ["Strafrecht","Overmacht (art. 40) en noodtoestand?","Overmacht: een kracht of drang waaraan je geen weerstand kon bieden. Noodtoestand is een conflict van plichten."],
+ ["Strafrecht","Welke bepaling dekt geweld volgens de geweldsinstructie?","Art. 42 lid 2 Sr."],
+ ["Strafrecht","Art. 43 Sr: ambtelijk bevel?","De ondergeschikte is niet strafbaar bij goede trouw én nakoming binnen de kring van zijn ondergeschiktheid, ook al was het bevel onbevoegd."],
+ ["Strafrecht","Wat stelt art. 372 Sr strafbaar?","Het door schuld schenden van de geweldsinstructie, met lichamelijk letsel of de dood tot gevolg."]
+];
+var MISTAKES = [
+ ["Afweer als aparte bevoegdheid", "Afweer is geen losse regeling, maar een van de gronden bij elk geweldmiddel."],
+ ["Pepperspray bij passief verzet", "Blijven zitten is geen onttrekken. Dan eerst fysieke technieken."],
+ ["Vuurwapen op een vluchtende dief", "Diefstal haalt de 4 jaar, maar voldoet aan geen van de drie extra eisen. Een woningfeit telt alleen met geweld of bedreiging tegen personen."],
+ ["Vuurwapen bij bekende identiteit", "Identiteit bekend en uitstel geen onaanvaardbaar gevaar: geen vuurwapen, ook niet na een gewapende overval."],
+ ["SSW schokmodus ter aanhouding", "Schokmodus alleen voor dieren en afweer. Aanhouden kan alleen in schietmodus."],
+ ["Handboeien 'standaard'", "Altijd een feit of omstandigheid: ontvluchting of veiligheid. Bij hulpverlening alleen veiligheid."],
+ ["Boeien melden vergeten", "Ook zonder kracht: onverwijld schriftelijk aan de hOvJ, met de redenen."],
+ ["Waarschuwen zonder het middel te noemen", "Noem altijd het middel. 'Stop of ik gebruik geweld' voldoet niet."],
+ ["Dreigen = geweld melden", "Dreigen of waarschuwen is geen aanwenden van geweld, dus geen geweldsmelding."],
+ ["Hond: extra eis meenemen", "Bij de hond geldt alleen de 4-jaarsgrens, zonder extra eis. Bij een menigte altijd aangelijnd."],
+ ["Vervoersfouillering melden", "Die meld je niet. De veiligheidsfouillering meld je wel."],
+ ["Gevaar niet meer onmiddellijk", "Veiligheidsfouillering eist onmiddellijk gevaar. Als het gevaar weg is, vervalt de grond."]
+];
+var tabs = [["mid","Middel"],["chk","6 checks"],["mel","Melden"],["bf","Boeien/fouill."],["val","Valkuilen"],["fl","Flits"]];
+var cur = "mid", mid = "Vuurwapen", fi = 0, flip = false;
+var checked = {};
+function $(h){var d=document.createElement("div");d.innerHTML=h;return d}
+function setTab(t){cur=t;draw()}
+function draw(){
+ var nav=document.getElementById("tabs");nav.innerHTML="";
+ tabs.forEach(function(t){var b=document.createElement("button");b.textContent=t[1];b.setAttribute("role","tab");b.setAttribute("aria-selected",t[0]===cur?"true":"false");b.onclick=function(){qEl.value="";qx.style.display="none";setTab(t[0]);window.scrollTo(0,0)};nav.appendChild(b)});
+ var m=document.getElementById("m");m.innerHTML="";
+ var qv=qEl&&qEl.value.trim();
+ if(qv){vSearch(m,qv);linkDom(m);return}
+ ({mid:vMid,chk:vChk,mel:vMel,bf:vBf,val:vVal,fl:vFl})[cur](m);linkDom(m);
+}
+function vMid(m){
+ m.appendChild($('<div class="mn">Kies het middel en zie meteen wanneer het mag.</div>'));
+ var c=document.createElement("div");c.className="chips";
+ Object.keys(MIDDELEN).forEach(function(k){var b=document.createElement("button");b.textContent=k;b.setAttribute("aria-pressed",k===mid?"true":"false");b.onclick=function(){mid=k;draw()};c.appendChild(b)});
+ m.appendChild(c);
+ var card=document.createElement("div");card.className="card";
+ card.innerHTML="<h2>"+mid+"</h2>"+MIDDELEN[mid].map(function(r){return '<div class="row"><div class="tag">'+r[0]+'</div><div class="v">'+r[1]+'</div></div>'}).join("");
+ m.appendChild(card);
+ m.appendChild($('<p class="small">Afweer (direct gevaar voor leven of zwaar lichamelijk letsel) staat bij alle middelen. Dieren: alleen vuurwapen (doden), pepperspray en SSW.</p>'));
+}
+function vChk(m){
+ m.appendChild($('<div class="mn">Loop dit af bij elke casus. Mist er een stap, dan is het antwoord vaak fout.</div>'));
+ var card=document.createElement("div");card.className="card";
+ CHECKS.forEach(function(c,i){
+  var r=document.createElement("div");r.className="chk";r.setAttribute("role","checkbox");r.tabIndex=0;r.setAttribute("aria-checked",checked[i]?"true":"false");
+  r.innerHTML='<div class="box">&#10003;</div><div class="t"><b>'+(i+1)+'. '+c[0]+'</b><small>'+c[1]+'</small></div>';
+  var f=function(){checked[i]=!checked[i];draw()};r.onclick=f;r.onkeydown=function(e){if(e.key===" "||e.key==="Enter"){e.preventDefault();f()}};
+  card.appendChild(r)});
+ m.appendChild(card);
+ var b=document.createElement("button");b.textContent="Wis vinkjes";b.className="chips";b.style.cssText="border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px;border-radius:10px;font:600 .9rem system-ui";b.onclick=function(){checked={};draw()};m.appendChild(b);
+}
+function vMel(m){
+ m.appendChild($('<div class="card"><h2>Wat meld je, hoe en aan wie</h2><table><tr><th>Wat</th><th>Hoe</th></tr>'+
+ '<tr><td>Dreigen of waarschuwen</td><td><span class="pill n">geen melding</span></td></tr>'+
+ '<tr><td>Geweld, geweldmiddel, vuurwapen ter hand</td><td><b>Schriftelijk</b> (i8): aard, middel, gevolgen. <b>Mondeling</b>: feiten, omstandigheden, redenen. Zo spoedig mogelijk, aan de hOvJ.</td></tr>'+
+ '<tr><td>Handboeien, mondafscherming</td><td>Onverwijld schriftelijk, met redenen, aan de hOvJ.</td></tr>'+
+ '<tr><td>Veiligheidsfouillering</td><td>Onverwijld schriftelijk, met redenen.</td></tr>'+
+ '<tr><td>Vervoersfouillering</td><td><span class="pill n">geen melding</span></td></tr>'+
+ '<tr><td>Meerdere gaf last (ontruiming)</td><td>De meerdere meldt. Jij geeft de hOvJ desgevraagd inlichtingen.</td></tr></table></div>'));
+ m.appendChild($('<div class="card"><h2>Wie registreert wat</h2><div class="row"><div class="tag">hOvJ</div><div class="v">Registreert bij dood of letsel van meer dan geringe betekenis (een gehechte wenkbrauw), vuurwapengebruik (ook een waarschuwingsschot), of eigen oordeel.</div></div><div class="row"><div class="tag">Officier van justitie</div><div class="v">Krijgt via de korpschef <b>terstond</b> kennis bij dood, zwaar lichamelijk letsel (ook als dat ernstig te verwachten was) en vuurwapengebruik met enig letsel. Anders zo spoedig mogelijk, als de korpschef daar aanleiding toe ziet.</div></div></div>'));
+ m.appendChild($('<div class="card"><h2>Getallen</h2><table><tr><th>Getal</th><th>Wanneer precies</th></tr>'+
+ '<tr><td><b>4 jaar of meer, én extra eis</b></td><td><b>Vuurwapen</b>, onttrekken (art. 7 lid 1 sub b): misdrijf met strafbedreiging van 4 jaar of meer <b>en</b> één van drie: ernstige aantasting lichamelijke integriteit · woning met geweld of bedreiging · bedreigend voor de samenleving.</td></tr>'+
+ '<tr><td><b>4 jaar of meer, alleen</b></td><td><b>Hond</b>, onttrekken (art. 15a lid 1 sub b): alleen de strafbedreiging, geen extra eis.</td></tr>'+
+ '<tr><td><b>Geen 4-jaarsgrens</b></td><td><b>Pepperspray, SSW en wapenstok</b>: onttrekken kan zonder strafbedreiging als drempel.</td></tr>'+
+ '<tr><td><b>Poging en deelneming</b></td><td>Tellen mee voor de 4 jaar bij vuurwapen en hond (art. 47 en 48 Sr).</td></tr>'+
+ '<tr><td><b>24 uur</b></td><td>art. 35a: na toestemming hOvJ. Verlengen kan telkens met ten hoogste 24 uur, na toestemming hOvJ en overleg met de arts.</td></tr>'+
+ '<tr><td><b>3 uur</b></td><td>art. 35a bij spoed: jij beslist vooruitlopend op toestemming, de hOvJ direct informeren en die beslist over voortzetting. De arts onverwijld op de hoogte.</td></tr>'+
+ '<tr><td><b>5</b></td><td>Hulpmiddelen jegens ingeslotenen (art. 35a): helm, handschoenen, mondafscherming, polsbanden, enkelbanden met tussenstuk. De lijst is limitatief.</td></tr></table>'+
+ '<p class="small">Niet getal maar wel een valkuil: alleen bij het vuurwapen gaat het om aanstonds ander <b>levensbedreigend</b> geweld. Bij pepperspray, SSW, wapenstok en hond is aanstonds ander geweld genoeg.</p></div>'));
+}
+function vBf(m){
+ m.appendChild($('<div class="card"><h2>Vervoer of verplaatsing?</h2><table><tr><th></th><th>Wat</th></tr>'+
+ '<tr><td><b>Vervoer</b></td><td>Een persoon overbrengen <b>van A naar B</b>, bijvoorbeeld van de plaats van aanhouding naar het bureau.</td></tr>'+
+ '<tr><td><b>Verplaatsing</b> art. 1 lid 4 sub q</td><td>Een persoon overbrengen <b>binnen dezelfde locatie</b>, zonder vervoermiddel, bijvoorbeeld binnen het bureau.</td></tr>'+
+ '<tr><td><b>Ook</b></td><td>De periode <b>direct voor</b> het vervoer of de verplaatsing valt eronder.</td></tr></table>'+
+ '<p class="small"><b>Verschil in het kort:</b> vervoer is naar een andere plek, verplaatsing blijft op dezelfde plek en zonder vervoermiddel.</p>'+
+ '<p class="small"><b>Waarom het telt:</b> handboeien (art. 22) en mondafscherming (art. 22a) mag je alleen aanleggen voor vervoer of verplaatsing. Verblijft de persoon in de cel, dan blijven handboeien niet zitten: die vervang je door de hulpmiddelen van art. 35a. De vervoersfouillering (art. 7 lid 4 Politiewet) geldt alleen bij vervoer.</p></div>'));
+ m.appendChild($('<div class="card"><h2>Handboeien en mondafscherming (art. 22)</h2><div class="row"><div class="tag">Wie</div><div class="v">Iemand die <b>rechtens van zijn vrijheid is beroofd</b>, voor vervoer of verplaatsing.</div></div><div class="row"><div class="tag">Gronden</div><div class="v"><span class="pill y">ontvluchting</span><span class="pill y">veiligheid</span> Veiligheid = van de aangehouden persoon zelf, de ambtenaar of derden. Meer gronden zijn er niet. Bij hulpverlening op het bureau alleen veiligheid (art. 22b).</div></div><div class="row"><div class="tag">Mond</div><div class="v">Mondafscherming alleen voor de veiligheid van de ambtenaar of derden.</div></div><div class="row"><div class="tag">Bewijs</div><div class="v">Feiten of omstandigheden die het <b>redelijkerwijs vereisen</b>. Rustig nu sluit het niet uit: een bekende die je recent meermaals bespuugde kan aanleiding zijn. Lang geleden is te weinig.</div></div><div class="row"><div class="tag">Benen</div><div class="v">Extra boeien om de enkels bij wild schoppen valt onder de algemene geweldsbevoegdheid (art. 7 lid 1 en 7 Politiewet).</div></div></div>'));
+ m.appendChild($('<div class="mn"><b>Handboeien aanleggen mag alleen bij gevaar voor:</b><br>1. <b>ontvluchting</b>, of<br>2. <b>veiligheid</b> van de persoon zelf, de ambtenaar of derden.<br>Meer gronden zijn er niet. Het gevaar moet blijken uit feiten of omstandigheden.<br><small>Geheugensteun voor die feiten (eigen hulpmiddel, niet uit de wet): <b>GOED</b> = Geweld, Ontvluchten eerder, Eerdere ervaring, Delict.</small></div>'));
+ m.appendChild($('<div class="card"><h2>Fouilleren: vier soorten</h2><table><tr><th>Soort</th><th>Kern</th></tr>'+
+ '<tr><td><b>Veiligheid</b> art. 7 lid 3</td><td>Iedere persoon · kleding en voorwerpen · onmiddellijk gevaar · noodzakelijk · zo veel mogelijk zelfde geslacht · <b>melden</b></td></tr>'+
+ '<tr><td><b>Vervoer</b> art. 7 lid 4</td><td>Te vervoeren of in te sluiten persoon · vóór vervoer door de politie · <b>niet melden</b></td></tr>'+
+ '<tr><td><b>Insluiting</b> art. 28</td><td>Aftasten en doorzoeken van kleding en voorwerpen van de ingeslotene</td></tr>'+
+ '<tr><td><b>Opsporing</b> art. 56 Sv</td><td>Buiten de RTGP-toets. Aangehouden verdachte, ernstige bezwaren, belang van het onderzoek.</td></tr></table>'+
+ '<p class="small">Art. 20 geldt voor beide: oppervlakkig aftasten, zo veel mogelijk door iemand van hetzelfde geslacht. Gevaarlijke voorwerpen neem je in bewaring, dus een mogelijk mes mag je uit de zak halen. Alleen de veiligheidsfouillering meld je (art. 21).</p></div>'));
+}
+function vVal(m){
+ m.appendChild($('<div class="mn">De fouten die het vaakst worden gemaakt.</div>'));
+ MISTAKES.forEach(function(x){m.appendChild($('<div class="mist"><b>'+x[0]+'</b><span class="r">'+x[1]+'</span></div>'))});
+}
+var cats = ["Alle"].concat(CARDS.map(function(c){return c[0]}).filter(function(v,i,a){return a.indexOf(v)===i}));
+var cat = "Alle", deck = null, known = {}, shown = 0, seen = 0;
+function build(){
+ deck = CARDS.map(function(c,i){return i}).filter(function(i){return (cat==="Alle"||CARDS[i][0]===cat) && !known[i]});
+ for(var i=deck.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=deck[i];deck[i]=deck[j];deck[j]=t}
+ flip=false;
+}
+function vFl(m){
+ if(!deck) build();
+ var c=document.createElement("div");c.className="chips";
+ cats.forEach(function(k){var b=document.createElement("button");b.textContent=k;b.style.padding="7px 11px";b.style.fontSize=".82rem";b.setAttribute("aria-pressed",k===cat?"true":"false");b.onclick=function(){cat=k;deck=null;draw()};c.appendChild(b)});
+ m.appendChild(c);
+ var total=CARDS.filter(function(x){return cat==="Alle"||x[0]===cat}).length;
+ var done=CARDS.filter(function(x,i){return (cat==="Alle"||x[0]===cat)&&known[i]}).length;
+ if(!deck.length){
+  m.appendChild($('<div class="card"><h2>Alles gehaald in '+(cat==="Alle"?"alle onderdelen":cat)+'</h2><p>Je hebt alle '+total+' kaarten als bekend gemarkeerd.</p></div>'));
+  var r=document.createElement("button");r.textContent="Begin opnieuw";r.className="fl";r.style.minHeight="0";r.style.textAlign="center";r.style.fontWeight="700";r.onclick=function(){known={};deck=null;draw()};m.appendChild(r);return;
+ }
+ m.appendChild($('<p class="small" style="margin:0 0 8px">'+done+' van '+total+' bekend · nog '+deck.length+' te gaan</p>'));
+ var ci=deck[0],cd=CARDS[ci];
+ var b=document.createElement("button");b.className="fl";
+ b.innerHTML='<div class="small" style="margin-bottom:6px;font-weight:700;text-transform:uppercase">'+cd[0]+'</div><div class="q">'+cd[1]+'</div>'+(flip?'<div class="a">'+cd[2]+'</div>':'<div class="hint">Denk eerst. Tik voor het antwoord.</div>');
+ b.onclick=function(){flip=!flip;draw()};
+ m.appendChild(b);
+ var ctl=document.createElement("div");ctl.className="ctl";
+ var no=document.createElement("button");no.textContent="Nog niet";no.onclick=function(){deck.push(deck.shift());flip=false;draw()};
+ var yes=document.createElement("button");yes.textContent="Wist ik";yes.style.cssText="background:var(--ok);color:#fff;border-color:var(--ok)";yes.onclick=function(){known[ci]=true;deck.shift();flip=false;draw()};
+ ctl.appendChild(no);ctl.appendChild(yes);m.appendChild(ctl);
+ if(flip){var rl=refsOf(cd[1]+" "+cd[2],CREF[CARDS.indexOf(cd)]);if(rl.length){var wp=document.createElement("p");wp.className="small";wp.style.textAlign="center";wp.innerHTML="Wettekst: "+rl.join(" &middot; ");m.appendChild(wp)}}
+ var rs=document.createElement("p");rs.className="small";rs.style.textAlign="center";rs.innerHTML='<a href="#" id="rs">Wis voortgang</a>';m.appendChild(rs);
+ rs.firstChild.onclick=function(e){e.preventDefault();known={};deck=null;draw()};
+}
+
+var STATIC = [
+ ["Melden","Dreigen of waarschuwen","Geen geweldsmelding. Dreigen of waarschuwen is geen aanwenden van geweld."],
+ ["Melden","Geweld, geweldmiddel, vuurwapen ter hand","Schriftelijk (i8): aard, middel, gevolgen. Mondeling: feiten, omstandigheden, redenen. Zo spoedig mogelijk aan de hOvJ."],
+ ["Melden","Handboeien, mondafscherming, veiligheidsfouillering","Onverwijld schriftelijk aan de hOvJ, met redenen (art. 21 en 23). Vervoersfouillering niet melden."],
+ ["Melden","Meerdere gaf last","De meerdere meldt. Jij geeft de hOvJ desgevraagd inlichtingen."],
+ ["Melden","hOvJ registreert","Dood of letsel van meer dan geringe betekenis, vuurwapengebruik, of eigen oordeel."],
+ ["Melden","Officier van justitie","Terstond bij dood, zwaar letsel (ook als ernstig te verwachten) of vuurwapengebruik met enig letsel, via de korpschef (art. 18)."],
+ ["Getallen","4 jaar, 24 uur, 3 uur, 5 middelen","4 jaar of meer én extra eis: vuurwapen onttrekken (integriteit, woning met geweld, bedreigend voor samenleving). 4 jaar of meer alleen: hond. Geen 4-jaarsgrens: pepperspray, SSW, wapenstok. Poging en deelneming tellen mee. 24 uur: art. 35a na toestemming hOvJ, verlengen telkens 24 uur. 3 uur: art. 35a bij spoed. 5: hulpmiddelen jegens ingeslotenen."],
+ ["Boeien","Handboeien en mondafscherming art. 22","Rechtens van vrijheid beroofd, voor vervoer of verplaatsing. Gronden: ontvluchting of veiligheid (aangehouden persoon, ambtenaar, derden). Bij hulpverlening alleen veiligheid (art. 22b). Mondafscherming alleen voor veiligheid ambtenaar of derden."],
+ ["Boeien","Handboeien: de twee gronden","Gevaar voor ontvluchting of voor de veiligheid van de persoon zelf, de ambtenaar of derden, blijkend uit feiten of omstandigheden. Meer gronden zijn er niet. Geheugensteun GOED (eigen hulpmiddel, niet uit de wet): Geweld, Ontvluchten eerder, Eerdere ervaring, Delict."],
+ ["Boeien","Benen boeien","Valt onder de algemene geweldsbevoegdheid (art. 7 lid 1 en 7 Politiewet)."],
+ ["Fouilleren","Veiligheidsfouillering art. 7 lid 3","Iedere persoon, onmiddellijk gevaar, noodzakelijk, melden."],
+ ["Fouilleren","Vervoersfouillering art. 7 lid 4","Te vervoeren of in te sluiten persoon, vóór vervoer door de politie, niet melden."],
+ ["Fouilleren","Aftasten art. 20","Oppervlakkig aftasten, zo veel mogelijk zelfde geslacht, gevaarlijke voorwerpen in bewaring nemen."],
+ ["Fouilleren","Opsporingsfouillering art. 56 Sv","Buiten de RTGP-toets. Aangehouden verdachte, ernstige bezwaren, belang van het onderzoek."],
+ ["Ingeslotenen","Art. 35a","24 uur na toestemming hOvJ; bij spoed 3 uur; vijf hulpmiddelen: helm, handschoenen, mondafscherming, polsbanden, enkelbanden met tussenstuk."]
+];
+var INDEX = null;
+
+var LAWS={AI:["BWBR0006589","Ambtsinstructie"],PW:["BWBR0031788","Politiewet 2012"],BBUP:["BWBR0032136","Besluit bewapening en uitrusting politie"],SR:["BWBR0001854","Wetboek van Strafrecht"],SV:["BWBR0001903","Wetboek van Strafvordering"],EVRM:["BWBV0001000","EVRM"]};
+var REF=/\b[Aa]rt(?:ikel|\.)\s+(\d+[a-z]?)((?:\s+lid\s+\d+)?(?:\s+en\s+\d+)?(?:\s+sub\s+[a-z])?)(\s+(?:AI|Politiewet(?: 2012)?|Sr|Sv|EVRM|Bbup))?/g;
+function lawOf(num,rest,mark){
+ if(mark){var w=mark.trim();return w==="AI"?"AI":w==="Sr"?"SR":w==="Sv"?"SV":w==="EVRM"?"EVRM":w==="Bbup"?"BBUP":"PW"}
+ if(num==="40"||num==="41")return "SR";
+ if(num==="7"&&/lid\s+[34]\b/.test(rest))return "PW";
+ return "AI";
+}
+function refUrl(law,num){var L=LAWS[law];return "https://wetten.overheid.nl/jci1.3:c:"+L[0]+(law==="EVRM"?"":"&artikel="+num)}
+function refLink(txt,num,rest,mark){
+ var law=lawOf(num,rest,mark),L=LAWS[law];
+ return '<a class="wl" href="'+refUrl(law,num)+'" target="_blank" rel="noopener" title="Wettekst: '+L[1]+(law==="EVRM"?"":" art. "+num)+' (wetten.overheid.nl)">'+txt+'</a>';
+}
+function refsOf(text,spec){
+ var out=[],seen={},m;
+ function add(law,num){var k=law+num;if(seen[k])return;seen[k]=1;out.push('<a class="wl" href="'+refUrl(law,num)+'" target="_blank" rel="noopener">'+LAWS[law][1]+(law==="EVRM"?(num?" art. "+num:""):" art. "+num)+'</a>')}
+ REF.lastIndex=0;
+ while((m=REF.exec(text))){add(lawOf(m[1],m[2]||"",m[3]),m[1])}
+ (spec||"").split(";").forEach(function(x){x=x.trim();if(!x)return;var q=x.split(" ");add(q[0],q[1])});
+ return out;
+}
+function linkDom(root){
+ var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,null),nodes=[],n;
+ while((n=w.nextNode())){var bad=false,e=n.parentNode;while(e&&e!==root){if(e.tagName==="BUTTON"||e.tagName==="A"){bad=true;break}e=e.parentNode}if(!bad&&/[Aa]rt(?:ikel|\.)\s+\d/.test(n.nodeValue))nodes.push(n)}
+ nodes.forEach(function(t){
+  var h=esc(t.nodeValue).replace(REF,function(x,num,rest,mark){return refLink(x,num,rest||"",mark)});
+  var s=document.createElement("span");s.innerHTML=h;
+  s.querySelectorAll("a.wl").forEach(function(a){a.onclick=function(ev){ev.stopPropagation()}});
+  t.parentNode.replaceChild(s,t);
+ });
+}
+function strip(h){var d=document.createElement("div");d.innerHTML=h;return d.textContent||""}
+function buildIndex(){
+ INDEX=[];
+ Object.keys(MIDDELEN).forEach(function(k){MIDDELEN[k].forEach(function(r){INDEX.push(["Middel: "+k,r[0],strip(r[1])])})});
+ CHECKS.forEach(function(c){INDEX.push(["Check",strip(c[0]),strip(c[1])])});
+ STATIC.forEach(function(x){INDEX.push(x)});
+ MISTAKES.forEach(function(x){INDEX.push(["Valkuil",x[0],x[1]])});
+ CARDS.forEach(function(c){INDEX.push(["Flitskaart: "+c[0],c[1],c[2]])});
+}
+function esc(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function hl(t,terms){
+ var out=esc(t);
+ terms.forEach(function(w){var re=new RegExp("("+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");out=out.replace(re,"<mark>$1</mark>")});
+ return out;
+}
+function vSearch(m,qv){
+ if(!INDEX)buildIndex();
+ var terms=qv.toLowerCase().split(/\s+/).filter(function(w){return w.length>0});
+ var hits=INDEX.filter(function(e){var h=(e[0]+" "+e[1]+" "+e[2]).toLowerCase();return terms.every(function(w){return h.indexOf(w)>-1})});
+ m.appendChild($('<p class="small" style="margin:0 0 6px">'+hits.length+' resultaten voor &ldquo;'+esc(qv)+'&rdquo;</p>'));
+ var card=document.createElement("div");card.className="card";
+ if(!hits.length)card.innerHTML="<p>Niets gevonden. Probeer een korter woord, bijvoorbeeld &lsquo;boei&rsquo; of &lsquo;uur&rsquo;.</p>";
+ hits.slice(0,40).forEach(function(e){card.innerHTML+='<div class="res"><div class="sec">'+esc(e[0])+'</div><b>'+hl(e[1],terms)+'</b><span>'+hl(e[2],terms)+'</span></div>'});
+ m.appendChild(card);
+}
+var qEl=document.getElementById("q"),qx=document.getElementById("qx"),upb=document.getElementById("up");
+function runSearch(){qx.style.display=qEl.value?"block":"none";draw()}
+qEl.addEventListener("input",runSearch);
+qx.onclick=function(){qEl.value="";runSearch();qEl.focus()};
+window.addEventListener("scroll",function(){upb.style.display=window.scrollY>300?"block":"none"},{passive:true});
+upb.onclick=function(){window.scrollTo({top:0,behavior:"smooth"})};
+draw();
+</script>
+<footer style="padding:8px 16px 28px;max-width:640px;margin:0 auto" class="small">Gebaseerd op de Syllabus Geweldsbeheersing v2.0 en de wettekst (Ambtsinstructie, Politiewet 2012, Sr). Korpsvoorschriften en eigen leerstof gaan voor.</footer>
+</body>
+</html>
